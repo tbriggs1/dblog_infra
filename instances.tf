@@ -10,12 +10,16 @@ resource "aws_instance" "dblog" {
     Name = "dblog"
   }
 
+  provisioner "file" {
+    source      = "dockerscript.sh"
+    destination = "/tmp/dockerscript.sh"
+  }
+
   provisioner "remote-exec" {
-    inline = [
-      "sudo apt update -y",
-      "sudo apt install -y nginx",
-      "echo 'Hello World' | sudo tee /var/www/html/index.html"
-    ]
+  inline = [
+    "chmod +x /tmp/dockerscript.sh",
+    "sudo /tmp/dockerscript.sh"
+  ]
   }
 
   connection {
